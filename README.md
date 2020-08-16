@@ -7,6 +7,8 @@ It's a monorepo (thus we use Yarn) with the following structure:
 * /main (the main process, with [electron-quick-start-typescript](https://github.com/electron/electron-quick-start-typescript) as its base)
 * /renderer (the renderer process, created using create-react-app)
 
+I'm going to write a bit about how to recreate this.
+
 ## Setting Up The Renderer Process
 
 Create the project that will become the renderer thread:
