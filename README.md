@@ -123,4 +123,4 @@ Or make a production build:
 
 	yarn build
 
-Click the "Ping the main process" button, and you'll see "ping" in the console. That confirms that the main and renderer (React) processes are communcating properly.
+Click the "Ping the main process" button, and you'll see "ping" in the console. That confirms that the main and renderer (React) processes are communicating properly.
