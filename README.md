@@ -19,6 +19,13 @@ In renderer/package.json, add the following:
 
 Note that its name, in package.json, is "renderer".
 
+At the top of renderer/src/App.tsx, add the following:
+
+	const { ipcRenderer } = window.require('electron');
+
+And at an appropriate place in the same file, add the following:
+     <button onClick={() => { ipcRenderer.send("ping"); }}>Ping the main process</button>
+
 ## Setting Up The Main Process
 
 Add the project that will become the main process:
@@ -35,7 +42,8 @@ Note that its name is "electron-quick-start-typescript".
 
 Make some adjustments in main/src/main.ts.
 
-	// Add this
+	// Add these
+	import { ipcMain } from "electron";
 	import * as isDev from "electron-is-dev"
 
 	const mainWindow = new BrowserWindow({
@@ -51,6 +59,11 @@ Make some adjustments in main/src/main.ts.
 	} else {
 		mainWindow.loadFile("./index.html");
 	}
+
+	// Add this
+	ipcMain.on("ping", () => {
+  		console.log("ping");
+	});
 
 The loadURL and loadFile calls refer to paths that we'll set up next.
 
@@ -106,3 +119,5 @@ Then, from the root, you can start a development instance:
 Or make a production build:
 
 	yarn build
+
+Click the "Ping the main process" button, and you'll see "ping" in the console.
