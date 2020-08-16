@@ -11,7 +11,7 @@ It's a monorepo (thus we use Yarn) with the following structure:
 
 Create the project that will become the renderer thread:
 
-	yarn create react-app  renderer --template=typescript
+	yarn create react-app renderer --template=typescript
 
 In renderer/package.json, add the following:
 
