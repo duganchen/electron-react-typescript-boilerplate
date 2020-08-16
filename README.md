@@ -106,7 +106,7 @@ Add a Procfile to run with Foreman:
 	renderer: BROWSER=none yarn workspace renderer start
 	main: ./scripts/start_main.sh
 
-Add scripts in package.json to build and to run:
+Add scripts in package.json to build and to run the project:
 
 	"scripts": {
 	  "start": "nf start",
@@ -121,4 +121,4 @@ Or make a production build:
 
 	yarn build
 
-Click the "Ping the main process" button, and you'll see "ping" in the console.
+Click the "Ping the main process" button, and you'll see "ping" in the console. That confirms that the main and renderer (React) processes are communcating properly.
