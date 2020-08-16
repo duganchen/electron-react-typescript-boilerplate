@@ -24,7 +24,8 @@ At the top of renderer/src/App.tsx, add the following:
 	const { ipcRenderer } = window.require('electron');
 
 And at an appropriate place in the same file, add the following:
-     <button onClick={() => { ipcRenderer.send("ping"); }}>Ping the main process</button>
+     
+	<button onClick={() => { ipcRenderer.send("ping"); }}>Ping the main process</button>
 
 ## Setting Up The Main Process
 
