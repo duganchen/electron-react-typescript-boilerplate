@@ -1,0 +1,9 @@
+{
+  "name": "electron-react-ts-boilerplate",
+  "version": "1.0.0",
+  "description": "Electron/Typescript/React Boilerplate",
+  "main": "index.js",
+  "author": "Dugan Chen <thedoogster@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
