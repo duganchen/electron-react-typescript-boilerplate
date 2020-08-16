@@ -33,6 +33,27 @@ Add the project that will become the main process:
 
 Note that its name is "electron-quick-start-typescript".
 
+Make some adjustments in main/src/main.ts.
+
+	// Add this
+	import * as isDev from "electron-is-dev"
+
+	const mainWindow = new BrowserWindow({
+		webPreferences: {
+			nodeIntegration: true // Add this
+		},
+	});
+
+	// Change the following...
+	// and load the index.html of the app.
+	if (isDev) {
+		mainWindow.loadURL("http://localhost:5000/");
+	} else {
+		mainWindow.loadFile("./index.html");
+	}
+
+The loadURL and loadFile calls refer to paths that we'll set up next.
+
 ## Setting Up The Monorepo
 
 In the root package.json, add both projects as workspaces:
@@ -77,25 +98,6 @@ Add scripts in package.json to build and to run:
 	  "start": "nf start",
 	  "build": "scripts/build.sh"
 	},
-
-Make some adjustments in main/src/main.ts.
-
-	// Add this
-	import * as isDev from "electron-is-dev"
-
-	const mainWindow = new BrowserWindow({
-		webPreferences: {
-			nodeIntegration: true // Add this
-		},
-	});
-
-	// Change the following...
-	// and load the index.html of the app.
-	if (isDev) {
-		mainWindow.loadURL("http://localhost:5000/");
-	} else {
-		mainWindow.loadFile("./index.html");
-	}
 
 Then, from the root, you can start a development instance:
 
