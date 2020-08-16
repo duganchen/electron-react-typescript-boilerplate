@@ -11,7 +11,7 @@ I'm going to write a bit about how to recreate this.
 
 ## Setting Up The Renderer Process
 
-Create the project that will become the renderer thread:
+Create the project that will become the renderer process:
 
 	yarn create react-app renderer --template=typescript
 
