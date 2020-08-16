@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+const { ipcRenderer } = window.require('electron');
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
           Learn React
         </a>
       </header>
-    </div>
+      <p><button onClick={() => { ipcRenderer.send("ping"); }}>Ping the main process</button></p>
+    </div >
   );
 }
 
