@@ -29,10 +29,6 @@ And at an appropriate place in the same file, add the following:
      
 	<button onClick={() => { ipcRenderer.send("ping"); }}>Ping the main process</button>
 
-In its tsconfig.json file, add the following under "compilerOptions" (it's needed to get VSCode's debugger to work properly with Async/Await):
-
-	"target": "ESNext",
-
 ## Setting Up The Main Process
 
 Add the project that will become the main process:
@@ -77,6 +73,10 @@ Delete the following line so that it doesn't intefere with VSCode's debugger:
 	mainWindow.webContents.openDevTools();
 
 The loadURL call loads CRA's dev server; the loadFile call loads a path we'll set up next.
+
+In its tsconfig.json file, add the following under "compilerOptions" (it's needed to get VSCode's debugger to work properly with Async/Await):
+
+	"target": "ESNext",
 
 ## Setting Up The Monorepo
 
