@@ -76,7 +76,7 @@ Delete the following line so that it doesn't intefere with VSCode's debugger:
 
 	mainWindow.webContents.openDevTools();
 
-The loadURL and loadFile calls refer to paths that we'll set up next.
+The loadURL call loads CRA's dev server; the loadFile call loads a path we'll set up next.
 
 ## Setting Up The Monorepo
 
