@@ -19,10 +19,6 @@ In react/package.json, add the following:
 
 	"homepage": "./"
 
-And the following, under "scripts":
-
-	"debug": "npm run build && electron ./dist/main.js -remote-debugging-port=9222"
-
 Note that its name, in package.json, is "renderer".
 
 At the top of renderer/src/App.tsx, add the following:
@@ -46,6 +42,10 @@ Add the project that will become the main process:
 	cd ..
 
 Note that its name, in package.json, is "electron-quick-start-typescript". Change it to "main".
+
+And the following, under "scripts", in package.json:
+
+	"debug": "npm run build && electron ./dist/main.js -remote-debugging-port=9222"
 
 Make some adjustments in main/src/main.ts.
 
