@@ -35,7 +35,7 @@ Add the project that will become the main process:
 
 	git clone https://github.com/electron/electron-quick-start-typescript.git main
 	cd main
-	rm -rf .git
+	rm -rf .git package-lock.json
 	yarn install
 	yarn add electron-is-dev
 	yarn add @types/testing-library__dom
