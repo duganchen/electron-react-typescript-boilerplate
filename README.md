@@ -152,7 +152,7 @@ In the monorepo's root, add .vscode/launch.json:
 	  ]
 	}
 
-Set breakpoints in the Typescript files, and use "Debug Main Process" and "Debug Render Process" to step through the main and render processes, respectively. Both should work as expected.
+Set breakpoints in the Typescript files, and use "Debug Main Process" and "Debug Render Process" to step through the main and render processes, respectively.
 
 ## Credits
 
