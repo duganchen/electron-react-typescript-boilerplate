@@ -4,8 +4,8 @@ This is a boilerplate for an Electron/React/Typescript project.
 
 It's a monorepo (thus we use Yarn) with the following structure:
 
-* /main (the main process, with [electron-quick-start-typescript](https://github.com/electron/electron-quick-start-typescript) as its base)
-* /renderer (the renderer process, created using create-react-app)
+* /electron (the main process, with [electron-quick-start-typescript](https://github.com/electron/electron-quick-start-typescript) as its base)
+* /react (the renderer process, created using create-react-app)
 
 I'm going to write a bit about how to recreate this.
 
@@ -13,15 +13,15 @@ I'm going to write a bit about how to recreate this.
 
 Create the project that will become the renderer process:
 
-	yarn create react-app renderer --template=typescript
+	yarn create react-app react --template=typescript
 
-In renderer/package.json, add the following:
+In react/package.json, add the following:
 
 	"homepage": "./"
 
-Note that its name, in package.json, is "renderer".
+Note that its name, in package.json, is "react".
 
-At the top of renderer/src/App.tsx, add the following:
+At the top of react/src/App.tsx, add the following:
 
 	const { ipcRenderer } = window.require('electron');
 
@@ -33,17 +33,17 @@ And at an appropriate place in the same file, add the following:
 
 Add the project that will become the main process:
 
-	git clone https://github.com/electron/electron-quick-start-typescript.git main
-	cd main
+	git clone https://github.com/electron/electron-quick-start-typescript.git electron
+	cd electron
 	rm -rf .git package-lock.json
 	yarn install
 	yarn add electron-is-dev
-	yarn add @types/testing-library__dom
+	yarn add --dev @types/testing-library__dom
 	cd ..
 
-Note that its name is "electron-quick-start-typescript".
+Note that its name, in package.json, is "electron-quick-start-typescript". Change it to "electron".
 
-Make some adjustments in main/src/main.ts.
+Make some adjustments in electron/src/main.ts.
 
 	// Add these
 	import { ipcMain } from "electron";
