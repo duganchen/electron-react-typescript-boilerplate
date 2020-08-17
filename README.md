@@ -106,7 +106,7 @@ Now, when you want to build React into Electron (not needed for when you're just
 
 ## Testing
 
-Start React server:
+Start the React server:
 	
 	BROWSER=none yarn workspace renderer start
 
