@@ -17,13 +17,10 @@ function createWindow() {
 
   // and load the index.html of the app.
   if (isDev) {
-    mainWindow.loadURL("http://localhost:5000/");
+    mainWindow.loadURL("http://localhost:3000/");
   } else {
     mainWindow.loadFile("./index.html");
   }
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
