@@ -68,9 +68,8 @@ Make some adjustments in main/src/main.ts.
   		console.log("ping");
 	});
 
-Delete the following line so that it doesn't intefere with VSCode's debugger:
-
-	mainWindow.webContents.openDevTools();
+	// Delete this so that it doesn't interfere with VSCode's debugger.
+	// mainWindow.webContents.openDevTools();
 
 The loadURL call loads CRA's dev server; the loadFile call loads a path we'll set up next.
 
