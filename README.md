@@ -123,4 +123,10 @@ Or make a production build:
 
 	yarn build
 
+And start it:
+
+	ELECTRON_IS_DEV=0 yarn workspace main run start
+
+## Testing
+
 Click the "Ping the main process" button, and you'll see "ping" in the console. That confirms that the main and renderer (React) processes are communicating properly.
