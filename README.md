@@ -60,7 +60,7 @@ Make some adjustments in main/src/main.ts.
 	if (isDev) {
 		mainWindow.loadURL("http://localhost:5000/");
 	} else {
-		mainWindow.loadFile("./index.html");
+		mainWindow.loadFile(path.join(__dirname, "index.html"));
 	}
 
 	// Add this
