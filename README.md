@@ -124,6 +124,8 @@ Here's your workflow going forward. You keep the React server running in the bac
 
 Install VSCode's [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension if you haven't already.
 
+I also recommend the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extensions: again, if you don't already have them.
+
 In the monorepo's root, add .vscode/launch.json:
 
 	{
