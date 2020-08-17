@@ -19,6 +19,10 @@ In react/package.json, add the following:
 
 	"homepage": "./"
 
+And the following, under "scripts":
+
+	"debug": "npm run build && electron ./dist/main.js -remote-debugging-port=9222"
+
 Note that its name, in package.json, is "renderer".
 
 At the top of renderer/src/App.tsx, add the following:
@@ -144,17 +148,35 @@ In the monorepo's root, add .vscode/launch.json:
 	      "name": "Debug Renderer Process",
 	      "type": "chrome",
 	      "request": "launch",
-	      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+	      "runtimeExecutable": "yarn",
 	      "runtimeArgs": [
-		"${workspaceFolder}/main/dist/main.js",
-		"--remote-debugging-port=9222"
+		"workspace",
+		"main",
+		"run",
+		"debug"
 	      ],
 	      "webRoot": "${workspaceRoot}"
-	    }
+	    },
+	    {
+	      "name": "Attach to Chrome",
+	      "type": "chrome",
+	      "request": "attach",
+	      "port": 9222,
+	      "webRoot": "${workspaceRoot}",
+	      "sourceMaps": true
+	    },
 	  ]
 	}
 
 Set breakpoints in the Typescript files, and use "Debug Main Process" and "Debug Render Process" to step through the main and render processes, respectively.
+
+Alternatively, you might want to use use Electron's dev tools. Perhaps you want to use a [DevTools Extension](https://www.electronjs.org/docs/tutorial/devtools-extension) such as the React Developer Tools. In that case, add the openDevTools() line back. Start Electron with the the developer tools and the debugger port both open:
+
+	yarn workspace main run debug
+
+In VSCode, set a breakpoint in your React. Select the "Attach to Chrome" configuration and, well, attach to Chrome (Electron).
+
+In Electron, press Cmd-R to reload. You should see VSCode hit the breakpoint.
 
 ## Credits
 
