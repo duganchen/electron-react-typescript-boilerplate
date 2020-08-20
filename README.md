@@ -120,7 +120,7 @@ When it's serving on port 3000, start Electron:
 
 Click the "Ping the main process" button, and you'll see "ping" in the console. That confirms that the main (Electron) and renderer (React) processes are communicating properly.
 
-You've have live-reloading in the renderer process because it's being served by react-scripts. To see changes in the main process, restart electron.
+You've have live-reloading in the renderer process because it's being served by react-scripts. To see changes in the main process, restart electron. You can use Watchmen or entr to automatically do that when the source files change.
 
 ## Setting Up VSCode Debugging
 
