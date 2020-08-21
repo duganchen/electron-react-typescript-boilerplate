@@ -14,6 +14,7 @@ I'm going to write a bit about how to recreate this.
 Create the project that will become the renderer process:
 
 	yarn create react-app renderer --template=typescript
+	yarn workspace renderer add --dev eslint
 
 In react/package.json, add the following:
 
@@ -39,6 +40,8 @@ Add the project that will become the main process:
 	yarn install
 	yarn add electron-is-dev
 	yarn add --dev @types/testing-library__dom
+	yarn add dotenv
+	yarn add --dev eslint
 	cd ..
 
 Note that its name, in package.json, is "electron-quick-start-typescript". Change it to "main".
@@ -52,12 +55,26 @@ Make some adjustments in main/src/main.ts.
 	// Add these
 	import { ipcMain } from "electron";
 	import * as isDev from "electron-is-dev"
+	import { config } from "dotenv";
+	config();
+
+	// ...
 
 	const mainWindow = new BrowserWindow({
 		webPreferences: {
 			nodeIntegration: true // Add this
 		},
 	});
+
+	// ...
+
+	// Add this to the "ready" handler:
+
+	if (process.env.DEVTOOLS) {
+		await session.defaultSession.loadExtension(process.env.DEVTOOLS);
+	}
+
+	// ...
 
 	// Change the following...
 	// and load the index.html of the app.
@@ -67,10 +84,14 @@ Make some adjustments in main/src/main.ts.
 		mainWindow.loadFile(path.join(__dirname, "index.html"));
 	}
 
+	// ...
+
 	// Add this
 	ipcMain.on("ping", () => {
   		console.log("ping");
 	});
+
+	// ...
 
 	// Delete this so that it doesn't interfere with VSCode's debugger.
 	// mainWindow.webContents.openDevTools();
@@ -170,7 +191,13 @@ In the monorepo's root, add .vscode/launch.json:
 
 Set breakpoints in the Typescript files, and use "Debug Main Process" and "Debug Render Process" to step through the main and render processes, respectively.
 
-Alternatively, you might want to use use Electron's dev tools. Perhaps you want to use a [DevTools Extension](https://www.electronjs.org/docs/tutorial/devtools-extension) such as the React Developer Tools. In that case, add the openDevTools() line back. Start Electron with the the developer tools and the debugger port both open:
+Alternatively, you might want to use use Electron's dev tools. Perhaps you want to use a [DevTools Extension](https://www.electronjs.org/docs/tutorial/devtools-extension) such as the React Developer Tools. In that case, add the openDevTools() line back.
+
+Put the following in main/.env:
+
+	DEVTOOLS=/path/to/react-developer-tools
+
+Start Electron with the the developer tools and the debugger port both open:
 
 	yarn workspace main run debug
 

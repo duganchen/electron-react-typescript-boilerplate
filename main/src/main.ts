@@ -1,8 +1,12 @@
-import { app, BrowserWindow } from "electron";
+import { app, session, BrowserWindow } from "electron";
 import * as path from "path";
 import * as isDev from "electron-is-dev";
 
 import { ipcMain } from "electron";
+
+import { config } from "dotenv";
+
+config();
 
 function createWindow() {
   // Create the browser window.
@@ -10,7 +14,7 @@ function createWindow() {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      nodeIntegration: true
+      nodeIntegration: true,
     },
     width: 800,
   });
@@ -26,7 +30,11 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", () => {
+app.on("ready", async () => {
+  if (process.env.DEVTOOLS) {
+    await session.defaultSession.loadExtension(process.env.DEVTOOLS);
+  }
+
   createWindow();
 
   app.on("activate", function () {
