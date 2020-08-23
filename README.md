@@ -2,12 +2,23 @@
 
 This is a boilerplate for an Electron/React/Typescript project.
 
+To start it, enter "yarn start". That gives you the following:
+
+- the React is served with react-scripts, and has live reload
+- Electron's debugging port is open, and ready to be attached to by VSCode
+- The Typescript source files for the main process are compiled whenever they're saved
+- There is a "Restart" menu item to restart the main process (and pick up code changes)
+
+I'm going to write a bit about how to recreate this.
+
+## The Monorepo Structure
+
 It's a monorepo (thus we use Yarn) with the following structure:
 
 - /main (the main process, with [electron-quick-start-typescript](https://github.com/electron/electron-quick-start-typescript) as its base)
 - /renderer (the renderer process, created using create-react-app)
 
-I'm going to write a bit about how to recreate this.
+Each has its own package.json file. The contents of the root of the repo are responsible for coordinating them.
 
 ## Setting Up The Renderer Process
 
@@ -77,6 +88,11 @@ Make some adjustments in main/src/main.ts.
 
     // Change the following...
     if (isDev) {
+
+      const menu = Menu.getApplicationMenu();
+      menu.append(new MenuItem({ label: "Restart", click: () => app.exit(3) }));
+      Menu.setApplicationMenu(menu);
+
       const reactPort =
         process.env.REACT_PORT !== undefined ? process.env.REACT_PORT : "3000";
       mainWindow.loadURL(`http://localhost:${reactPort}/`);
@@ -118,17 +134,18 @@ Add script, scripts/start_main.sh, to wait until create-react-app's dev server i
 
     #!/usr/bin/env bash
 
-    yarn workspace main build
-
     export REACT_PORT=${REACT_PORT:-5000}
 
     while ! echo exit | nc localhost "$REACT_PORT"; do
       sleep 10
     done
 
-    while :
+    STATUS="3"
+    while [[ "$STATUS" == "3" ]]
     do
-      yarn workspace main debug
+      yarn workspace main start
+      # The exit code is 0 if you quit, 3 if you restart
+      STATUS="$?"
     done
 
 I've found that when we run "react-scripts start" with Foreman, its port is 5000.
