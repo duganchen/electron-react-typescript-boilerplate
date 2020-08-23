@@ -2,11 +2,7 @@ import { app, session, BrowserWindow } from "electron";
 import * as path from "path";
 import * as isDev from "electron-is-dev";
 
-import { ipcMain } from "electron";
-
-import { config } from "dotenv";
-
-config();
+import { ipcMain, Menu } from "electron";
 
 function createWindow() {
   // Create the browser window.
@@ -23,9 +19,8 @@ function createWindow() {
   if (isDev) {
     const reactPort =
       process.env.REACT_PORT !== undefined ? process.env.REACT_PORT : "3000";
-    console.log(process.env.REACT_PORT);
-    console.log(`http://localhost:${reactPort}/`);
-    mainWindow.loadURL(`http://localhost:${process.env.REACT_PORT}/`);
+
+    mainWindow.loadURL(`http://localhost:${reactPort}/`);
   } else {
     mainWindow.loadFile("./index.html");
   }

@@ -39,8 +39,8 @@ Add the project that will become the main process:
     rm -rf .git package-lock.json
     yarn install
     yarn add electron-is-dev
-    yarn add --dev @types/testing-library__dom
     yarn add dotenv
+    yarn add --dev @types/testing-library__dom
     yarn add --dev eslint
     cd ..
 
@@ -48,99 +48,54 @@ Note that its name, in package.json, is "electron-quick-start-typescript". Chang
 
 And the following, under "scripts", in package.json:
 
-    "debug": "npm run build && electron ./dist/main.js -remote-debugging-port=9222"
+    "debug": "electron ./dist/main.js -remote-debugging-port=9222"
 
 Make some adjustments in main/src/main.ts.
 
     // Add these
     import { ipcMain } from "electron";
-    import * as isDev from "electron-is-dev"
+    import * as isDev from "electron-is-dev";
     import { config } from "dotenv";
     config();
 
     // ...
 
     const mainWindow = new BrowserWindow({
-    	webPreferences: {
-    		nodeIntegration: true // Add this
+      webPreferences: {
+    	  nodeIntegration: true // Add this
     	},
     });
 
     // ...
 
     // Add this to the "ready" handler:
-
     if (process.env.DEVTOOLS) {
-    	await session.defaultSession.loadExtension(process.env.DEVTOOLS);
+      await session.defaultSession.loadExtension(process.env.DEVTOOLS);
     }
 
     // ...
 
     // Change the following...
-    // and load the index.html of the app.
     if (isDev) {
-    	mainWindow.loadURL("http://localhost:3000/");
+      const reactPort =
+        process.env.REACT_PORT !== undefined ? process.env.REACT_PORT : "3000";
+      mainWindow.loadURL(`http://localhost:${reactPort}/`);
     } else {
-    	mainWindow.loadFile(path.join(__dirname, "index.html"));
+      mainWindow.loadFile("./index.html");
     }
 
     // ...
 
     // Add this
     ipcMain.on("ping", () => {
-
-console.log("ping");
-});
-
-    // ...
-
-    // Delete this so that it doesn't interfere with VSCode's debugger.
-    // mainWindow.webContents.openDevTools();
+      console.log("ping");
+    });
 
 The loadURL call loads CRA's dev server; the loadFile call loads a path we'll set up next.
 
 In its tsconfig.json file, add the following under "compilerOptions" (it's needed to get VSCode's debugger to work properly with Async/Await):
 
     "target": "ESNext",
-
-## Setting Up The Monorepo
-
-In the root package.json, add both projects as workspaces:
-
-    "workspaces": [
-      "main",
-      "renderer"
-    ],
-
-Add a script, scripts/build.sh, to build React into Electron:
-
-    #!/usr/bin/env bash
-
-    yarn workspace renderer build
-    yarn workspace electron-quick-start-typescript build
-    cp -r renderer/build/* main/dist/
-
-Add a "script" in package.json to run it:
-
-    "scripts": {
-      "build": "scripts/build.sh"
-    },
-
-Now, when you want to build React into Electron (not needed for when you're just developing), you can do:
-yarn run build
-
-## Testing
-
-Start the React server:
-BROWSER=none yarn workspace renderer start
-
-When it's serving on port 3000, start Electron:
-
-    yarn workspace main start
-
-Click the "Ping the main process" button, and you'll see "ping" in the console. That confirms that the main (Electron) and renderer (React) processes are communicating properly.
-
-You've have live-reloading in the renderer process because it's being served by react-scripts. To see changes in the main process, restart electron. You can use Watchmen or entr to automatically do that when the source files change.
 
 ## Setting Up The Monorepo
 
@@ -163,13 +118,18 @@ Add script, scripts/start_main.sh, to wait until create-react-app's dev server i
 
     #!/usr/bin/env bash
 
-    export REACT_PORT=\${REACT_PORT:-5000}
+    yarn workspace main build
 
-    while ! echo exit | nc localhost "\$REACT_PORT"; do
-    sleep 10
+    export REACT_PORT=${REACT_PORT:-5000}
+
+    while ! echo exit | nc localhost "$REACT_PORT"; do
+      sleep 10
     done
 
-    yarn workspace main start
+    while :
+    do
+      yarn workspace main debug
+    done
 
 I've found that when we run "react-scripts start" with Foreman, its port is 5000.
 
@@ -180,6 +140,7 @@ Add Foreman:
 Add a Procfile to run with Foreman:
 
     renderer: BROWSER=none yarn workspace renderer start
+    watch: yarn workspace main watch
     main: ./scripts/start_main.sh
 
 Add scripts in package.json to build and to run the project:
@@ -201,13 +162,27 @@ And start it:
 
     ELECTRON_IS_DEV=0 yarn workspace main run start
 
+## Testing
+
+To test, just start it like this:
+
+    yarn start
+
+You have hot reload for the React app because it's being served with React Scripts. To restart Electron, quit it; it will restart automatically, and pick up any changes you've made to the main process' source code.
+
+Click the "Ping the main process" button, and you'll see "ping" in the console. That confirms that the main (Electron) and renderer (React) processes are communicating properly.
+
 ## Setting Up VSCode Debugging
 
-Here's your workflow going forward. You keep the React server running in the background (probably in its own terminal), you open the root of the monorepo as a workspace in VSCode, and you use VSCode to debug both the main and renderer processes.
+Here's your workflow going forward. You keep "yarn start" running in the background (probably in its own terminal), you open the root of the monorepo as a workspace in VSCode, and you use VSCode to debug both the main and renderer processes.
 
 Install VSCode's [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension if you haven't already.
 
 I also recommend the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extensions: again, if you don't already have them.
+
+To install the React Developer Tools, look up [DevTools Extension](https://www.electronjs.org/docs/tutorial/devtools-extension) to see how to get the path to the extension. Then put the following in main/.env:
+
+    DEVTOOLS=/path/to/react-developer-tools
 
 In the monorepo's root, add .vscode/launch.json:
 
@@ -215,53 +190,17 @@ In the monorepo's root, add .vscode/launch.json:
       "version": "0.2.0",
       "configurations": [
         {
-          "name": "Debug Main Process",
-          "type": "node",
-          "request": "launch",
-          "cwd": "${workspaceFolder}",
-          "runtimeExecutable": "yarn",
-          "runtimeArgs": ["workspace", "main", "run", "start"],
-          "outputCapture": "std"
-        },
-        {
-          "name": "Debug Renderer Process",
-          "type": "chrome",
-          "request": "launch",
-          "runtimeExecutable": "yarn",
-          "runtimeArgs": [
-    	"workspace",
-    	"main",
-    	"run",
-    	"debug"
-          ],
-          "webRoot": "${workspaceRoot}"
-        },
-        {
           "name": "Attach to Chrome",
           "type": "chrome",
           "request": "attach",
           "port": 9222,
           "webRoot": "${workspaceRoot}",
           "sourceMaps": true
-        },
+        }
       ]
     }
 
-Set breakpoints in the Typescript files, and use "Debug Main Process" and "Debug Render Process" to step through the main and render processes, respectively.
-
-Alternatively, you might want to use use Electron's dev tools. Perhaps you want to use a [DevTools Extension](https://www.electronjs.org/docs/tutorial/devtools-extension) such as the React Developer Tools. In that case, add the openDevTools() line back.
-
-Put the following in main/.env:
-
-    DEVTOOLS=/path/to/react-developer-tools
-
-Start Electron with the the developer tools and the debugger port both open:
-
-    yarn workspace main run debug
-
-In VSCode, set a breakpoint in your React. Select the "Attach to Chrome" configuration and, well, attach to Chrome (Electron).
-
-In Electron, press Cmd-R to reload. You should see VSCode hit the breakpoint.
+In VSCode, set a breakpoint. Select the "Attach to Chrome" configuration and, well, attach to Chrome (Electron). In Electron, press Cmd-R to reload. Use the application until VSCode hits the breakpoint.
 
 ## Credits
 
