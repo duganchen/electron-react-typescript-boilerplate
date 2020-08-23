@@ -6,7 +6,6 @@ To start it, enter "yarn start". That gives you the following:
 
 - the React is served with react-scripts, and has live reload
 - Electron's debugging port is open, and ready to be attached to by VSCode
-- The Typescript source files for the main process are compiled whenever they're saved
 - There is a "Restart" menu item to restart the main process (and pick up code changes)
 
 I'm going to write a bit about how to recreate this.
