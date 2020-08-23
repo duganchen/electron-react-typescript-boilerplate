@@ -7,7 +7,7 @@
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "start": "npm run build && electron ./dist/main.js",
-    "debug": "electron ./dist/main.js -remote-debugging-port=9222"
+    "debug": "electron ./dist/main.js -remote-debugging-port=9222 --inspect=5858"
   },
   "repository": "https://github.com/electron/electron-quick-start-typescript",
   "keywords": [

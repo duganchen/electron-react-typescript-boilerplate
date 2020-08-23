@@ -32,9 +32,9 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
-  if (process.env.DEVTOOLS) {
-    await session.defaultSession.loadExtension(process.env.DEVTOOLS);
-  }
+  // if (process.env.DEVTOOLS) {
+  //   await session.defaultSession.loadExtension(process.env.DEVTOOLS);
+  // }
 
   createWindow();
 
@@ -58,5 +58,6 @@ app.on("window-all-closed", () => {
 // code. You can also put them in separate files and require them here.
 
 ipcMain.on("ping", () => {
+  console.log("main thread breakpoint");
   console.log("ping");
 });

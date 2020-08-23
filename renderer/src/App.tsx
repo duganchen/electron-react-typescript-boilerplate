@@ -1,7 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-const { ipcRenderer } = window.require('electron');
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+const { ipcRenderer } = window.require("electron");
 
 function App() {
   return (
@@ -20,8 +20,17 @@ function App() {
           Learn React
         </a>
       </header>
-      <p><button onClick={() => { ipcRenderer.send("ping"); }}>Ping the main process</button></p>
-    </div >
+      <p>
+        <button
+          onClick={() => {
+            console.log("breakpoint");
+            ipcRenderer.send("ping");
+          }}
+        >
+          Ping the main process
+        </button>
+      </p>
+    </div>
   );
 }
 

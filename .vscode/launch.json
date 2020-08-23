@@ -8,6 +8,15 @@
       "port": 9222,
       "webRoot": "${workspaceRoot}",
       "sourceMaps": true
+    },
+    {
+      "name": "Debug Main Process",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["workspace", "main", "run", "start"],
+      "outputCapture": "std"
     }
   ]
 }

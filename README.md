@@ -44,6 +44,8 @@ And at an appropriate place in the same file, add the following:
 
 <button onClick={() => { ipcRenderer.send("ping"); }}>Ping the main process</button>
 
+The idea is that if you click the "Ping the main process" button, you'll see "ping" in the console. That's the confirmation that the main (Electron) and renderer (React) processes are communicating properly.
+
 ## Setting Up The Main Process
 
 Add the project that will become the main process:
@@ -182,45 +184,41 @@ And start it:
 
     ELECTRON_IS_DEV=0 yarn workspace main run start
 
-## Testing
-
-To test, just start it like this:
-
-    yarn start
-
-You have hot reload for the React app because it's being served with React Scripts. To restart Electron, quit it; it will restart automatically, and pick up any changes you've made to the main process' source code.
-
-Click the "Ping the main process" button, and you'll see "ping" in the console. That confirms that the main (Electron) and renderer (React) processes are communicating properly.
-
-## Setting Up VSCode Debugging
-
-Here's your workflow going forward. You keep "yarn start" running in the background (probably in its own terminal), you open the root of the monorepo as a workspace in VSCode, and you use VSCode to debug both the main and renderer processes.
-
-Install VSCode's [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension if you haven't already.
-
-I also recommend the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extensions: again, if you don't already have them.
+## Setting Up The React Developer Tools
 
 To install the React Developer Tools, look up [DevTools Extension](https://www.electronjs.org/docs/tutorial/devtools-extension) to see how to get the path to the extension. Then put the following in main/.env:
 
     DEVTOOLS=/path/to/react-developer-tools
 
-In the monorepo's root, add .vscode/launch.json:
+## Setting Up VSCode
 
-    {
-      "version": "0.2.0",
-      "configurations": [
-        {
-          "name": "Attach to Chrome",
-          "type": "chrome",
-          "request": "attach",
-          "port": 9222,
-          "webRoot": "${workspaceRoot}",
-          "sourceMaps": true
-        }
-      ]
-    }
+Add the .vscode files that I've prepared.
 
-In VSCode, set a breakpoint. Select the "Attach to Chrome" configuration and, well, attach to Chrome (Electron). In Electron, press Cmd-R to reload. Use the application until VSCode hits the breakpoint.
+Install VSCode's [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension if you haven't already.
+
+I also recommend the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extensions: again, if you don't already have them.
+
+## Debugging the Renderer Process
+
+In the root of the repository, enter:
+
+    yarn start
+
+That starts both the React server and Electron.
+
+In VSCode, set a breakpoint . Select the "Attach to Chrome" configuration and, well, attach to Chrome (Electron). Use the application until VSCode hits the breakpoint.
+
+You've have live reloading for the React, because it's being served with react-scripts. To pick up changes to the main process, build the Typescript with (Cmd|Ctrl)-Shift-b. Then select the "Restart" menu item.
+
+When you're done, Select "File->Quit".
+
+## Debugging the Main Process
+
+To debug the main process, don't use "yarn start". Instead, start only the React server with:
+
+    BROWSER=none yarn workspace renderer start
+
+Wait for the port to open. Then, in VSCode, use the "Debug Main Process" launch configuration and let VSCode launch Electron. Set a breakpoint in the main process. VSCode should hit it.
 
 ## Credits
 
