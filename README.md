@@ -172,18 +172,6 @@ Add scripts in package.json to build and to run the project:
       "build": "scripts/build.sh"
     },
 
-Then, from the root, you can start a development instance:
-
-    yarn start
-
-Or make a production build:
-
-    yarn build
-
-And start it:
-
-    ELECTRON_IS_DEV=0 yarn workspace main run start
-
 ## Setting Up The React Developer Tools
 
 To install the React Developer Tools, look up [DevTools Extension](https://www.electronjs.org/docs/tutorial/devtools-extension) to see how to get the path to the extension. Then put the following in main/.env:
@@ -198,7 +186,21 @@ Install VSCode's [Debugger for Chrome](https://marketplace.visualstudio.com/item
 
 I also recommend the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extensions: again, if you don't already have them.
 
-## Debugging the Renderer Process
+From then on you have two workflows, depending on whether you need to debug both processes or just the render process.
+
+## Debugging Both Processes
+
+In the root of the monorepo, enter:
+
+    BROWSER=none yarn workspace renderer start
+
+Wait for the port to open. Then, in VSCode, use the "Electron: All" launch configuration. Your app will start.
+
+Set a breakpoint anywhere in your Typescript source, and VSCode will hit it.
+
+## Debugging The Render Process Only
+
+If you only need to debug the renderer process, then the workflow is slightly faster.
 
 In the root of the repository, enter:
 
@@ -206,19 +208,13 @@ In the root of the repository, enter:
 
 That starts both the React server and Electron.
 
-In VSCode, set a breakpoint . Select the "Attach to Chrome" configuration and, well, attach to Chrome (Electron). Use the application until VSCode hits the breakpoint.
+In VSCode, set a breakpoint somewhere in the React. Select the "Attach to Chrome" configuration and, well, attach to Chrome (Electron). Use the application until VSCode hits the breakpoint.
 
-You've have live reloading for the React, because it's being served with react-scripts. To pick up changes to the main process, build the Typescript with (Cmd|Ctrl)-Shift-b. Then select the "Restart" menu item.
+You've have live reloading for the React, because it's being served with react-scripts
+
+To pick up changes to the main process, build the Typescript with (Cmd|Ctrl)-Shift-b. Then select the "Restart" menu item to restart your app.
 
 When you're done, Select "File->Quit".
-
-## Debugging the Main Process
-
-To debug the main process, don't use "yarn start". Instead, start only the React server with:
-
-    BROWSER=none yarn workspace renderer start
-
-Wait for the port to open. Then, in VSCode, use the "Debug Main Process" launch configuration and let VSCode launch Electron. Set a breakpoint in the main process. VSCode should hit it.
 
 ## Credits
 
@@ -228,3 +224,5 @@ Thank you to the following blog entry, for help with setting up debugging for th
 ](https://blog.matsu.io/debug-electron-vscode)
 
 And this one, for the "homepage" tip in particular: [Building an Electron application with create-react-app](https://www.freecodecamp.org/news/building-an-electron-application-with-create-react-app-97945861647c/)
+
+The debugging setup is also from Microsoft's [Electron debugging (main and renderer process)](https://github.com/Microsoft/vscode-recipes/tree/master/Electron) recipe.

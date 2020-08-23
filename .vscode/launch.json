@@ -7,7 +7,8 @@
       "request": "attach",
       "port": 9222,
       "webRoot": "${workspaceRoot}",
-      "sourceMaps": true
+      "sourceMaps": true,
+      "timeout": 30000
     },
     {
       "name": "Debug Main Process",
@@ -17,6 +18,13 @@
       "runtimeExecutable": "yarn",
       "runtimeArgs": ["workspace", "main", "run", "start"],
       "outputCapture": "std"
+    }
+  ],
+
+  "compounds": [
+    {
+      "name": "Electron: All",
+      "configurations": ["Attach to Chrome", "Debug Main Process"]
     }
   ]
 }
