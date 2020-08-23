@@ -143,7 +143,7 @@ Add script, scripts/start_main.sh, to wait until create-react-app's dev server i
     STATUS="3"
     while [[ "$STATUS" == "3" ]]
     do
-      yarn workspace main start
+      yarn workspace main debug
       # The exit code is 0 if you quit, 3 if you restart
       STATUS="$?"
     done
