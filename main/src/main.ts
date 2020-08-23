@@ -21,7 +21,11 @@ function createWindow() {
 
   // and load the index.html of the app.
   if (isDev) {
-    mainWindow.loadURL("http://localhost:3000/");
+    const reactPort =
+      process.env.REACT_PORT !== undefined ? process.env.REACT_PORT : "3000";
+    console.log(process.env.REACT_PORT);
+    console.log(`http://localhost:${reactPort}/`);
+    mainWindow.loadURL(`http://localhost:${process.env.REACT_PORT}/`);
   } else {
     mainWindow.loadFile("./index.html");
   }
