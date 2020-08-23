@@ -9,7 +9,6 @@ done
 STATUS="3"
 while [[ "$STATUS" == "3" ]]
 do
-  yarn workspace main build
   yarn workspace main debug
   # The exit code is 0 if you quit, 3 if you restart
   STATUS="$?"

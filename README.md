@@ -2,22 +2,26 @@
 
 This is a boilerplate for an Electron/React/Typescript project.
 
-To start it, enter "yarn start". That gives you the following:
-
-- the React is served with react-scripts, and has live reload
-- Electron's debugging port is open, and ready to be attached to by VSCode
-- There is a "Restart" menu item to restart the main process (and pick up code changes)
-
-I'm going to write a bit about how to recreate this.
-
-## The Monorepo Structure
-
 It's a monorepo (thus we use Yarn) with the following structure:
 
 - /main (the main process, with [electron-quick-start-typescript](https://github.com/electron/electron-quick-start-typescript) as its base)
 - /renderer (the renderer process, created using create-react-app)
 
 Each has its own package.json file. The contents of the root of the repo are responsible for coordinating them.
+
+In VSCode, Cmd-Shift-b to compile the main process.
+
+After doing that once,
+
+enter "yarn start". That gives you the following:
+
+- the React is served with react-scripts, and has live reload
+- Electron's debugging port is open, and ready to be attached to by VSCode
+- There is a "Restart" menu item to restart the main process (and pick up code changes)
+
+Changes to the renderer process get reloaded automatically. To reload the main process, press Cmd-Shift-b and choose the "Restart" menu item.
+
+## The Monorepo Structure
 
 ## Setting Up The Renderer Process
 
