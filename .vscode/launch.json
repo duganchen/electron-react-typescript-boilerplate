@@ -19,12 +19,5 @@
       "runtimeArgs": ["workspace", "main", "run", "start"],
       "outputCapture": "std"
     }
-  ],
-
-  "compounds": [
-    {
-      "name": "Electron: All",
-      "configurations": ["Attach to Chrome", "Debug Main Process"]
-    }
   ]
 }

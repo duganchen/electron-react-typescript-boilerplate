@@ -17,9 +17,8 @@ enter "yarn start". That gives you the following:
 
 - the React is served with react-scripts, and has live reload
 - Electron's debugging port is open, and ready to be attached to by VSCode
-- There is a "Restart" menu item to restart the main process (and pick up code changes)
 
-Changes to the renderer process get reloaded automatically. To reload the main process, press Cmd-Shift-b and choose the "Restart" menu item.
+Changes to the renderer process get reloaded automatically. To reload the main process, press Cmd-Shift-b and quit the app; it will restart.
 
 ## The Monorepo Structure
 
@@ -93,11 +92,6 @@ Make some adjustments in main/src/main.ts.
 
     // Change the following...
     if (isDev) {
-
-      const menu = Menu.getApplicationMenu();
-      menu.append(new MenuItem({ label: "Restart", click: () => app.exit(3) }));
-      Menu.setApplicationMenu(menu);
-
       const reactPort =
         process.env.REACT_PORT !== undefined ? process.env.REACT_PORT : "3000";
       mainWindow.loadURL(`http://localhost:${reactPort}/`);
@@ -145,13 +139,9 @@ Add script, scripts/start_main.sh, to wait until create-react-app's dev server i
       sleep 10
     done
 
-    STATUS="3"
-    while [[ "$STATUS" == "3" ]]
+    while :
     do
-      yarn workspace main build
       yarn workspace main debug
-      # The exit code is 0 if you quit, 3 if you restart
-      STATUS="$?"
     done
 
 I've found that when we run "react-scripts start" with Foreman, its port is 5000.
@@ -188,19 +178,7 @@ I also recommend the [Prettier](https://marketplace.visualstudio.com/items?itemN
 
 From then on you have two workflows, depending on whether you need to debug both processes or just the render process.
 
-## Debugging Both Processes
-
-In the root of the monorepo, enter:
-
-    BROWSER=none yarn workspace renderer start
-
-Wait for the port to open. Then, in VSCode, use the "Electron: All" launch configuration. Your app will start.
-
-Set a breakpoint anywhere in your Typescript source, and VSCode will hit it.
-
-## Debugging The Render Process Only
-
-If you only need to debug the renderer process, then the workflow is slightly faster.
+## Debugging The Render Process
 
 In the root of the repository, enter:
 
@@ -212,9 +190,22 @@ In VSCode, set a breakpoint somewhere in the React. Select the "Attach to Chrome
 
 You've have live reloading for the React, because it's being served with react-scripts
 
-To pick up changes to the main process, build the Typescript with (Cmd|Ctrl)-Shift-b. Then select the "Restart" menu item to restart your app.
+To pick up changes to the main process, build the Typescript with (Cmd|Ctrl)-Shift-b. Then restart your app.
 
-When you're done, Select "File->Quit".
+When you're done, press Ctrl+C to quit the "yarn start" script (start_main.sh).
+
+## Debugging The Main Process
+
+Debugging the main process is different.
+
+In the root of the monorepo, enter:
+
+    BROWSER=none yarn workspace renderer start
+
+Wait for the port to open. Then, in VSCode, use the "Debug Main Process" launch configuration. Your app will start.
+
+Set a breakpoint anywhere in your Typescript source, and VSCode will hit it.
+
 
 ## Credits
 
